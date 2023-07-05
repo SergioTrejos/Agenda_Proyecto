@@ -53,7 +53,7 @@ void Login::onLoginButtonClicked()
         QMessageBox::information(this, "Éxito", "Inicio de sesión exitoso.");
 
         // Emitir la señal de inicio de sesión exitoso
-        emit loginSuccessful(/*username*/);
+        emit loginSuccessful(username);
 
 
         // Cerrar la ventana de inicio de sesión

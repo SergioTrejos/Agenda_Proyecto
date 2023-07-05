@@ -14,7 +14,7 @@ public:
     static bool authenticate(const QString &username, const QString &password);
 
 signals:
-    void loginSuccessful();
+    void loginSuccessful(const QString &user);
 
 private slots:
     void onLoginButtonClicked();

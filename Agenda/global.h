@@ -4,6 +4,5 @@
 
 #include <QString>
 
-static QString user;
 
 #endif // GLOBAL_H

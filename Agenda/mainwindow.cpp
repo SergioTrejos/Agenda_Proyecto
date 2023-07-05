@@ -12,6 +12,8 @@
 #include <QMessageBox>
 #include <QFile>
 #include <QTextStream>
+#include <QDebug>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -43,7 +45,7 @@ void MainWindow::onLoginButtonClicked()
     Login *login = new Login(this);
 
     // Conectar la señal de inicio de sesión exitoso a un slot personalizado
-    connect(login, SIGNAL(loginSuccessful()), this, SLOT(onLoginSuccessful()));
+    connect(login, SIGNAL(loginSuccessful(const QString&)), this, SLOT(onLoginSuccessful(const QString&)));
 
     // Mostrar la ventana de inicio de sesión
     login->show();
@@ -61,12 +63,13 @@ void MainWindow::onResetPasswordButtonClicked()
     resetPassword->exec();
 }
 
-void MainWindow::onLoginSuccessful()
+void MainWindow::onLoginSuccessful(const QString& user)
 {
     // Cerrar la ventana principal
     close();
-
+    qDebug() << "This is a debug message" << user.toStdString().c_str();;
     // Abrir la ventana del menú principal
     MainMenuWindow *mainMenuWindow = new MainMenuWindow();
+    mainMenuWindow->setUser(user);
     mainMenuWindow->show();
 }

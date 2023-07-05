@@ -25,7 +25,7 @@ private slots:
     void onCreateUserButtonClicked();
     void onLoginButtonClicked();
     void onResetPasswordButtonClicked();
-    void onLoginSuccessful();
+    void onLoginSuccessful(const QString& user);
 
 
 };

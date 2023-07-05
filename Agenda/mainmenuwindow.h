@@ -17,11 +17,13 @@ class MainMenuWindow : public QMainWindow
 public:
     MainMenuWindow(QWidget *parent = nullptr);
     ~MainMenuWindow();
+    QString getUser();
+    void setUser(const QString& username);
 
 private:
     EventWindow *eventWindow;
     QCalendarWidget *calendarWidget;
-
+    QString user;
 
 private slots:
     void abrirEventWindow();

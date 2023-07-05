@@ -78,9 +78,21 @@ void MainMenuWindow::guardarEvento(const QString& nombreEvento, const QString& f
         out << "Fecha: " << fecha << "\n";
         out << "Hora: " << hora << "\n";
         archivo.close();
+        QMessageBox::information(this, "Éxito", "Evento guardado exitosamente.");
+
     }
     else
     {
         // Error al abrir el archivo
     }
+}
+
+void MainMenuWindow::setUser(const QString& username)
+{
+    user = username;
+}
+
+QString MainMenuWindow::getUser()
+{
+    return user;
 }
