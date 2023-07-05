@@ -19,6 +19,12 @@
 #include <QString>
 #include <QMessageBox>
 
+#include <QDir>
+#include <QDebug>
+#include <filesystem>
+
+namespace fs = std::filesystem;
+
 MainMenuWindow::MainMenuWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -83,6 +89,8 @@ QString MainMenuWindow::getUser()
 
 void MainMenuWindow::setup()
 {
+    textEdit = new QTextEdit();
+
     QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *layout = new QVBoxLayout(centralWidget);
     layout->setContentsMargins(50, 50, 50, 50); // Establecer márgenes
@@ -126,14 +134,47 @@ void MainMenuWindow::setup()
     connect(crearEventoButton, &QPushButton::clicked, this, &MainMenuWindow::abrirEventWindow);
     setCentralWidget(crearEventoButton);
 
+    QDate selectedDate = calendarWidget->selectedDate();
+
+    QString eventFilePath = QDir::currentPath() + "/" + user + QString("/%1/%2").arg(selectedDate.year()).arg(selectedDate.month());
+    QString eventFileName = QString("%1.txt").arg(selectedDate.day());
+    QDir folder(eventFilePath);
+    QFile eventFile(eventFilePath + "/" + eventFileName);
+
+    if (folder.exists()) {
+        QStringList files = folder.entryList(QDir::Files);
+        // Comprueba si el archivo específico está presente
+        if (files.contains(eventFileName)) {
+            if (eventFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                // Lee el contenido del archivo
+                QTextStream in(&eventFile);
+                QString contenido = in.readAll();
+
+                // Establece el contenido en el cuadro de texto
+                textEdit->setPlainText(contenido);
+
+                // Cierra el archivo
+                eventFile.close();
+            }
+        }
+    }
+    else {
+        QString contenido("No hay entradas para este día");
+        textEdit->setPlainText(contenido);
+    }
+
+
+
     crearEventoButton->setStyleSheet(buttonStyle);
 
     layout->addWidget(welcomeLabel);
     layout->addWidget(calendarWidget);
     layout->addWidget(crearEventoButton);
+    layout->addWidget(textEdit);
 
     setCentralWidget(centralWidget);
     adjustSize();
+
 }
 
 void MainMenuWindow::onDateClicked(const QDate& date) {
@@ -146,4 +187,33 @@ void MainMenuWindow::onDateClicked(const QDate& date) {
     qDebug() << "Día: " << day;
     qDebug() << "Mes: " << month;
     qDebug() << "Año: " << year;
+    QString eventFilePath = QDir::currentPath() + "/" + user + QString("/%1/%2").arg(year).arg(month);
+    QString eventFileName = QString("%1.txt").arg(day);
+    QDir folder(eventFilePath);
+    QFile eventFile(eventFilePath + "/" + eventFileName);
+
+    if (folder.exists()) {
+        QStringList files = folder.entryList(QDir::Files);
+        // Comprueba si el archivo específico está presente
+        qDebug() << "Prueba 1";
+        if (files.contains(eventFileName)) {
+            if (eventFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                // Lee el contenido del archivo
+                QTextStream in(&eventFile);
+                QString contenido = in.readAll();
+
+                // Establece el contenido en el cuadro de texto
+                textEdit->setPlainText(contenido);
+
+                // Cierra el archivo
+                eventFile.close();
+            }
+        }
+    }
+    else {
+        QString contenido("No hay entradas para este día");
+            textEdit->setPlainText(contenido);
+    }
+
+
 }

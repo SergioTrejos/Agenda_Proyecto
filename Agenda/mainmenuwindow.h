@@ -6,6 +6,7 @@
 #include <QMainWindow>
 #include <QCalendarWidget>
 #include <QWidget>
+#include <QTextEdit>
 
 class QPushButton;
 
@@ -25,6 +26,7 @@ private:
     EventWindow *eventWindow;
     QCalendarWidget *calendarWidget;
     QString user;
+    QTextEdit* textEdit;
 
 private slots:
     void abrirEventWindow();
