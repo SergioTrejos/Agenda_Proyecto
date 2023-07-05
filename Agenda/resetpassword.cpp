@@ -2,6 +2,9 @@
 #include <QMessageBox>
 #include <QFile>
 #include <QTextStream>
+#include <QDir>
+#include <QDebug>
+#include <filesystem>
 
 ResetPassword::ResetPassword(QWidget *parent)
     : QDialog(parent)
@@ -29,16 +32,19 @@ ResetPassword::ResetPassword(QWidget *parent)
 
 bool ResetPassword::changePassword(const QString& username, const QString& newPassword)
 {
-    QFile file(username + ".txt");
+    QString folderName = username;
+    QString loginFileName = (username + ".txt");
+    QString loginFilePath = QDir::currentPath() + "/" + folderName;
+    QFile file(loginFilePath + "/" + loginFileName);
     if (!file.exists()) {
         QMessageBox::critical(nullptr, "Error", "El nombre de usuario no existe.");
         return false;
     }
-
+    qDebug() << loginFilePath + "/" + loginFileName;
     if (file.open(QIODevice::ReadWrite | QIODevice::Text)) {
         QString fileContent = file.readAll();
         file.seek(0);
-
+        qDebug() << loginFilePath + "/" + loginFileName;
         QTextStream stream(&file);
         QStringList lines = fileContent.split('\n');
 

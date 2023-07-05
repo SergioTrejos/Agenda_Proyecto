@@ -18,10 +18,14 @@
 #include <QTextStream>
 #include <QString>
 #include <QMessageBox>
+#include <QTextEdit>
 
 #include <QDir>
 #include <QDebug>
 #include <filesystem>
+#include <algorithm>
+
+
 
 namespace fs = std::filesystem;
 
@@ -54,26 +58,91 @@ void MainMenuWindow::abrirEventWindow()
 
 void MainMenuWindow::guardarEvento(const QString& nombreEvento, const QString& day, const QString &month, const QString &year, const QString& hora)
 {
-    QString nombreArchivo = user + "_events.txt";
+    QDate selectedDate = calendarWidget->selectedDate();
 
-    QFile archivo(nombreArchivo);
-    if (archivo.open(QIODevice::Append | QIODevice::Text))
-    {
-        QTextStream out(&archivo);
-        out << "Evento: " << nombreEvento << "\n";
-        out << "Día: " << day << "\n";
-        out << "Mes: " << month << "\n";
-        out << "Año: " << year << "\n";
-        out << "Hora: " << hora << "\n";
-        out << "\n";
-        archivo.close();
-        QMessageBox::information(this, "Éxito", "Evento guardado exitosamente.");
 
+    QString folderYearPath = QDir::currentPath() + "/" + user + QString("/%1").arg(year);
+    QDir folderYear(folderYearPath);
+    if (folderYear.exists()) {
+        QString folderMonthPath = folderYearPath + QString("/%1").arg(month);
+        QDir folderMonth(folderMonthPath);
+        if (folderMonth.exists()) {
+            QStringList files = folderMonth.entryList(QDir::Files);
+            QString eventDayName = QString("%1.txt").arg(day);
+            QFile eventDayFile = folderMonthPath + "/" + eventDayName;
+            // Comprueba si el archivo específico está presente
+            if (files.contains(eventDayName)) {
+                qDebug() << folderMonthPath + "/" + eventDayName;
+                if (eventDayFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
+                {
+                    QTextStream out(&eventDayFile);
+                    out << hora << " " << nombreEvento << "\n";
+                    eventDayFile.close();
+                }
+                else {
+                    QMessageBox::critical(this, "Error", "No se pudo abrir el archivo");
+                    return;
+                }
+            }
+            else{
+                if (eventDayFile.open(QIODevice::WriteOnly | QIODevice::Text))
+                {
+                    qDebug() << "Archivo creado correctamente.";
+                    QTextStream out(&eventDayFile);
+                    out << hora << " " << nombreEvento << "\n";
+                    eventDayFile.close();
+                }
+            }
+        }
+        else {
+            if (folderMonth.mkpath(".")){
+                qDebug() << "La carpeta" << folderMonthPath << "ha sido creada.";
+            }
+            QString eventDayName = QString("%1.txt").arg(day);
+            QFile eventDayFile = folderMonthPath + "/" + eventDayName;
+            if (eventDayFile.open(QIODevice::WriteOnly | QIODevice::Text))
+            {
+                qDebug() << "Archivo creado correctamente.";
+                QTextStream out(&eventDayFile);
+                out << hora << " " << nombreEvento << "\n";
+                eventDayFile.close();
+            }
+            else {
+                QMessageBox::critical(this, "Error", "No se pudo abrir el archivo");
+                return;
+            }
+        }
     }
-    else
-    {
-        // Error al abrir el archivo
+    else {
+        QString folderMonthPath = folderYearPath + QString("/%1").arg(month);
+        QDir folderMonth(folderMonthPath);
+        QString eventDayName = QString("%1.txt").arg(day);
+        QFile eventDayFile = folderMonthPath + "/" + eventDayName;
+        if (folderYear.mkdir(folderYearPath)){
+            qDebug() << "Carpeta" << folderYear << "creada.";
+        }
+        if (folderMonth.mkdir(folderMonthPath)){
+            qDebug() << "Carpeta" << folderMonth << "creada.";
+        }
+        if (eventDayFile.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            qDebug() << "Archivo creado correctamente.";
+            QTextStream out(&eventDayFile);
+            out << hora << " " << nombreEvento << "\n";
+            eventDayFile.close();
+        }
+        else {
+            QMessageBox::critical(this, "Error", "No se pudo crear el archivo");
+            return;
     }
+    }
+    QString contenido("Evento guardado.");
+    QFont font = textEdit->font();
+    font.setPointSize(16);
+    textEdit->setFont(font);
+    textEdit->setPlainText(contenido);
+    textEdit->setStyleSheet("background-color: lightblue;");
+
 }
 
 void MainMenuWindow::setUser(const QString& username)
@@ -95,14 +164,11 @@ void MainMenuWindow::setup()
     QVBoxLayout *layout = new QVBoxLayout(centralWidget);
     layout->setContentsMargins(50, 50, 50, 50); // Establecer márgenes
 
-
     setWindowTitle("Menú principal");
-
         // Crear el widget del calendario
     calendarWidget = new QCalendarWidget(this);
 
     connect(calendarWidget, &QCalendarWidget::clicked, this, &MainMenuWindow::onDateClicked);
-
 
     QFont font("Helvetica", 16);  // Tipo de fuente y tamaño
     calendarWidget->setFont(font);
@@ -112,8 +178,6 @@ void MainMenuWindow::setup()
                                   "QCalendarWidget QTableView QTableCornerButton::section { background-color: gray; }"
                                   "QCalendarWidget QWidget { color: black; }"
                                   "QCalendarWidget QAbstractItemView:selected { background-color: blue; color: white; }");
-
-
 
     QLabel *welcomeLabel = new QLabel("Bienvenido: " + user, this);
     welcomeLabel->setAlignment(Qt::AlignCenter);
@@ -151,19 +215,36 @@ void MainMenuWindow::setup()
                 QString contenido = in.readAll();
 
                 // Establece el contenido en el cuadro de texto
+                QFont font = textEdit->font();
+                font.setPointSize(16);
+                textEdit->setFont(font);
                 textEdit->setPlainText(contenido);
+                textEdit->setStyleSheet("background-color: lightblue;");
+
 
                 // Cierra el archivo
                 eventFile.close();
             }
         }
+        else {
+            QString contenido("No hay entradas para este día");
+            QFont font = textEdit->font();
+            font.setPointSize(16);
+            textEdit->setFont(font);
+            textEdit->setPlainText(contenido);
+            textEdit->setStyleSheet("background-color: lightblue;");
+
+        }
     }
     else {
         QString contenido("No hay entradas para este día");
+        QFont font = textEdit->font();
+        font.setPointSize(16);
+        textEdit->setFont(font);
         textEdit->setPlainText(contenido);
+        textEdit->setStyleSheet("background-color: lightblue;");
+
     }
-
-
 
     crearEventoButton->setStyleSheet(buttonStyle);
 
@@ -187,6 +268,7 @@ void MainMenuWindow::onDateClicked(const QDate& date) {
     qDebug() << "Día: " << day;
     qDebug() << "Mes: " << month;
     qDebug() << "Año: " << year;
+
     QString eventFilePath = QDir::currentPath() + "/" + user + QString("/%1/%2").arg(year).arg(month);
     QString eventFileName = QString("%1.txt").arg(day);
     QDir folder(eventFilePath);
@@ -195,7 +277,7 @@ void MainMenuWindow::onDateClicked(const QDate& date) {
     if (folder.exists()) {
         QStringList files = folder.entryList(QDir::Files);
         // Comprueba si el archivo específico está presente
-        qDebug() << "Prueba 1";
+        qDebug() << "Prueba 2";
         if (files.contains(eventFileName)) {
             if (eventFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
                 // Lee el contenido del archivo
@@ -203,17 +285,35 @@ void MainMenuWindow::onDateClicked(const QDate& date) {
                 QString contenido = in.readAll();
 
                 // Establece el contenido en el cuadro de texto
+                QFont font = textEdit->font();
+                font.setPointSize(16);
+                textEdit->setFont(font);
                 textEdit->setPlainText(contenido);
+                textEdit->setStyleSheet("background-color: lightblue;");
+
 
                 // Cierra el archivo
                 eventFile.close();
             }
         }
+        else{
+            QString contenido("No hay entradas para este día");
+
+            QFont font = textEdit->font();
+
+            font.setPointSize(16);
+            textEdit->setFont(font);
+            textEdit->setPlainText(contenido);
+
+            textEdit->setStyleSheet("background-color: lightblue;");
+
+        }
     }
     else {
         QString contenido("No hay entradas para este día");
-            textEdit->setPlainText(contenido);
-    }
+        textEdit->setPlainText(contenido);
+        textEdit->setStyleSheet("background-color: lightblue;");
 
+    }
 
 }
