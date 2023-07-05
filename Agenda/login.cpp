@@ -10,6 +10,15 @@
 #include <QMessageBox>
 #include <QPushButton>
 
+
+#include <QDir>
+#include <QDebug>
+#include <filesystem>
+
+
+namespace fs = std::filesystem;
+
+
 Login::Login(QWidget *parent)
     : QDialog(parent)
 {
@@ -71,8 +80,11 @@ void Login::onLoginButtonClicked()
 
 bool Login::authenticate(const QString &username, const QString &password)
 {
-    QString filename = username + ".txt";
-    QFile file(filename);
+    QString folderName = username;
+    QString loginFileName = (username + ".txt");
+    QString loginFilePath = QDir::currentPath() + "/" + folderName + "/" + loginFileName;
+
+    QFile file(loginFilePath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return false;
 

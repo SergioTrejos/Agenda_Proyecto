@@ -14,16 +14,19 @@ class EventWindow : public QDialog
 public:
     explicit EventWindow(QWidget *parent = nullptr);
     ~EventWindow();
+    void setup(int day, int month, int year);
 
 signals:
-    void eventoCreado(const QString& nombreEvento, const QString& fecha, const QString& hora);
+    void eventoCreado(const QString& nombreEvento, const QString& day, const QString& month, const QString& year, const QString& hora);
 
 public slots:
     void crearEvento();
 
 private:
     QLineEdit *nombreEventoLineEdit;
-    QLineEdit *fechaLineEdit;
+    QLineEdit *dayLineEdit;
+    QLineEdit *monthLineEdit;
+    QLineEdit *yearLineEdit;
     QLineEdit *horaLineEdit;
     QPushButton *guardarButton;
     QPushButton* crearEventoButton;

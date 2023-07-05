@@ -38,11 +38,15 @@ void MainMenuWindow::abrirEventWindow()
         delete eventWindow;
 
     eventWindow = new EventWindow(this);
+
+    QDate selectedDate = calendarWidget->selectedDate();
+
     connect(eventWindow, &EventWindow::eventoCreado, this, &MainMenuWindow::guardarEvento);
+    eventWindow->setup(selectedDate.day(),selectedDate.month(),selectedDate.year());
     eventWindow->show();
 }
 
-void MainMenuWindow::guardarEvento(const QString& nombreEvento, const QString& fecha, const QString& hora)
+void MainMenuWindow::guardarEvento(const QString& nombreEvento, const QString& day, const QString &month, const QString &year, const QString& hora)
 {
     QString nombreArchivo = user + "_events.txt";
 
@@ -51,8 +55,11 @@ void MainMenuWindow::guardarEvento(const QString& nombreEvento, const QString& f
     {
         QTextStream out(&archivo);
         out << "Evento: " << nombreEvento << "\n";
-        out << "Fecha: " << fecha << "\n";
+        out << "Día: " << day << "\n";
+        out << "Mes: " << month << "\n";
+        out << "Año: " << year << "\n";
         out << "Hora: " << hora << "\n";
+        out << "\n";
         archivo.close();
         QMessageBox::information(this, "Éxito", "Evento guardado exitosamente.");
 
@@ -85,6 +92,9 @@ void MainMenuWindow::setup()
 
         // Crear el widget del calendario
     calendarWidget = new QCalendarWidget(this);
+
+    connect(calendarWidget, &QCalendarWidget::clicked, this, &MainMenuWindow::onDateClicked);
+
 
     QFont font("Helvetica", 16);  // Tipo de fuente y tamaño
     calendarWidget->setFont(font);
@@ -124,5 +134,16 @@ void MainMenuWindow::setup()
 
     setCentralWidget(centralWidget);
     adjustSize();
+}
 
+void MainMenuWindow::onDateClicked(const QDate& date) {
+    // Aquí puedes realizar las acciones que desees con la fecha seleccionada
+    // por ejemplo, mostrarla en un mensaje o realizar alguna otra operación.
+    int day = date.day();
+    int month = date.month();
+    int year = date.year();
+
+    qDebug() << "Día: " << day;
+    qDebug() << "Mes: " << month;
+    qDebug() << "Año: " << year;
 }

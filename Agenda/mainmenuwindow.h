@@ -28,7 +28,8 @@ private:
 
 private slots:
     void abrirEventWindow();
-    void guardarEvento(const QString& nombreEvento, const QString& fecha, const QString& hora);
+    void guardarEvento(const QString& nombreEvento, const QString& day, const QString& month, const QString& year, const QString& hora);
+    void onDateClicked(const QDate& date);
 };
 
 #endif // MAINMENUWINDOW_H
