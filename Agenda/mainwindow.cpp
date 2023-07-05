@@ -13,6 +13,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
+#include <QLabel>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -34,6 +35,12 @@ void MainWindow::setup()
 {
     QWidget *centralWidget = new QWidget(this);
     QVBoxLayout *layout = new QVBoxLayout(centralWidget);
+    layout->setContentsMargins(50, 50, 50, 50); // Establecer márgenes
+
+
+    QLabel *welcomeLabel = new QLabel("Bienvenido a la Agenda", this);
+    welcomeLabel->setAlignment(Qt::AlignCenter);
+    welcomeLabel->setStyleSheet("font-size: 24px;");
 
     setWindowTitle("Menú de inicio");
     loginButton = new QPushButton("Iniciar Sesión", this);
@@ -48,6 +55,22 @@ void MainWindow::setup()
     resetPasswordButton->setGeometry(50, 110, 200, 30);
     connect(resetPasswordButton, SIGNAL(clicked()), this, SLOT(onResetPasswordButtonClicked()));
 
+
+    QString buttonStyle = "QPushButton {"
+                          "    background-color: #4CAF50;"
+                          "    color: white;"
+                          "    border: none;"
+                          "    padding: 10px;"
+                          "    font-size: 16px;"
+                          "}"
+                          "QPushButton:hover {"
+                          "    background-color: #45a049;"
+                          "}";
+    loginButton->setStyleSheet(buttonStyle);
+    createUserButton->setStyleSheet(buttonStyle);
+    resetPasswordButton->setStyleSheet(buttonStyle);
+
+    layout->addWidget(welcomeLabel);
     layout->addWidget(loginButton);
     layout->addWidget(createUserButton);
     layout->addWidget(resetPasswordButton);
