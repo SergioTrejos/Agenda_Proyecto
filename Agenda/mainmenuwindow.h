@@ -19,6 +19,7 @@ public:
     ~MainMenuWindow();
     QString getUser();
     void setUser(const QString& username);
+    void setup();
 
 private:
     EventWindow *eventWindow;

@@ -112,5 +112,6 @@ void MainWindow::onLoginSuccessful(const QString& user)
     // Abrir la ventana del menú principal
     MainMenuWindow *mainMenuWindow = new MainMenuWindow();
     mainMenuWindow->setUser(user);
+    mainMenuWindow->setup();
     mainMenuWindow->show();
 }
