@@ -18,6 +18,23 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+
+}
+
+
+MainWindow::~MainWindow()
+{
+    delete createUserButton;
+    delete loginButton;
+    delete resetPasswordButton;
+}
+
+
+void MainWindow::setup()
+{
+    QWidget *centralWidget = new QWidget(this);
+    QVBoxLayout *layout = new QVBoxLayout(centralWidget);
+
     setWindowTitle("Menú de inicio");
     loginButton = new QPushButton("Iniciar Sesión", this);
     loginButton->setGeometry(50, 30, 200, 30);
@@ -30,13 +47,14 @@ MainWindow::MainWindow(QWidget *parent)
     resetPasswordButton = new QPushButton("Restaurar contraseña", this);
     resetPasswordButton->setGeometry(50, 110, 200, 30);
     connect(resetPasswordButton, SIGNAL(clicked()), this, SLOT(onResetPasswordButtonClicked()));
-}
 
-MainWindow::~MainWindow()
-{
-    delete createUserButton;
-    delete loginButton;
-    delete resetPasswordButton;
+    layout->addWidget(loginButton);
+    layout->addWidget(createUserButton);
+    layout->addWidget(resetPasswordButton);
+
+    setCentralWidget(centralWidget);
+    adjustSize();
+
 }
 
 void MainWindow::onLoginButtonClicked()
