@@ -1,0 +1,43 @@
+\hypertarget{mainmenuwindow_8h_source}{}\doxysection{mainmenuwindow.\+h}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ MAINMENUWINDOW\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ MAINMENUWINDOW\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}eventwindow.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}QPushButton"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <QMainWindow>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <QCalendarWidget>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <QWidget>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <QTextEdit>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{class\ }QPushButton;}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_main_menu_window}{MainMenuWindow}}\ :\ \textcolor{keyword}{public}\ QMainWindow}
+\DoxyCodeLine{00016\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00020\ \ \ \ \ \mbox{\hyperlink{class_main_menu_window}{MainMenuWindow}}(QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00021\ \ \ \ \ \mbox{\hyperlink{class_main_menu_window}{\string~MainMenuWindow}}();}
+\DoxyCodeLine{00022\ \ \ \ \ QString\ getUser();}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{void}\ setUser(\textcolor{keyword}{const}\ QString\&\ username);}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{void}\ setup();}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00027\ \ \ \ \ \mbox{\hyperlink{class_event_window}{EventWindow}}\ *eventWindow;}
+\DoxyCodeLine{00028\ \ \ \ \ QCalendarWidget\ *calendarWidget;}
+\DoxyCodeLine{00029\ \ \ \ \ QString\ user;}
+\DoxyCodeLine{00030\ \ \ \ \ QTextEdit*\ textEdit;}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{private}\ slots:}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ abrirEventWindow();}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{void}\ guardarEvento(\textcolor{keyword}{const}\ QString\&\ nombreEvento,\ \textcolor{keyword}{const}\ QString\&\ day,\ \textcolor{keyword}{const}\ QString\&\ month,\ \textcolor{keyword}{const}\ QString\&\ year,\ \textcolor{keyword}{const}\ QString\&\ hora);}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{void}\ onDateClicked(\textcolor{keyword}{const}\ QDate\&\ date);}
+\DoxyCodeLine{00036\ \};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ MAINMENUWINDOW\_H}}
+
+\end{DoxyCode}

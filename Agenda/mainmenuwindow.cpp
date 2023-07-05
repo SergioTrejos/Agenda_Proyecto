@@ -207,7 +207,7 @@ void MainMenuWindow::setup()
 
     if (folder.exists()) {
         QStringList files = folder.entryList(QDir::Files);
-        // Comprueba si el archivo específico está presente
+        // Comprueba si el archivo específico existe
         if (files.contains(eventFileName)) {
             if (eventFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
                 // Lee el contenido del archivo
@@ -259,8 +259,7 @@ void MainMenuWindow::setup()
 }
 
 void MainMenuWindow::onDateClicked(const QDate& date) {
-    // Aquí puedes realizar las acciones que desees con la fecha seleccionada
-    // por ejemplo, mostrarla en un mensaje o realizar alguna otra operación.
+
     int day = date.day();
     int month = date.month();
     int year = date.year();
